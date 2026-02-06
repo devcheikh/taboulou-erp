@@ -7,20 +7,26 @@ export default function AddEmployeeForm({ onClose }: { onClose: () => void }) {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true)
-        const formData = new FormData(e.currentTarget)
-        const employeeData = {
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            jobTitle: formData.get('jobTitle'),
-            email: formData.get('email'),
-            baseSalary: parseFloat(formData.get('baseSalary') as string),
-        }
-        const result = await createEmployee(employeeData)
-        setLoading(false)
-        if (result.success) {
-            onClose()
-        } else {
-            alert(result.error)
+        try {
+            const formData = new FormData(e.currentTarget)
+            const employeeData = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                jobTitle: formData.get('jobTitle'),
+                email: formData.get('email'),
+                baseSalary: parseFloat(formData.get('baseSalary') as string),
+            }
+            const result = await createEmployee(employeeData)
+            if (result.success) {
+                onClose()
+            } else {
+                alert(result.error)
+            }
+        } catch (err: any) {
+            console.error('Submission error:', err)
+            alert('Erreur lors de la création : ' + (err.message || 'Une erreur inattendue est survenue'))
+        } finally {
+            setLoading(false)
         }
     }
 

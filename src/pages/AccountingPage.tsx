@@ -15,19 +15,24 @@ export default function AccountingPage() {
         let mounted = true;
         async function fetchAll() {
             setLoading(true);
-            const [jData, aData, tbData, lgData] = await Promise.all([
-                getJournals(),
-                getAccounts(),
-                getTrialBalance(),
-                getGeneralLedger()
-            ]);
+            try {
+                const [jData, aData, tbData, lgData] = await Promise.all([
+                    getJournals(),
+                    getAccounts(),
+                    getTrialBalance(),
+                    getGeneralLedger()
+                ]);
 
-            if (mounted) {
-                setJournals(jData);
-                setAccounts(aData);
-                setTrialBalance(tbData);
-                setLedger(lgData);
-                setLoading(false);
+                if (mounted) {
+                    setJournals(jData);
+                    setAccounts(aData);
+                    setTrialBalance(tbData);
+                    setLedger(lgData);
+                }
+            } catch (err) {
+                console.error('Accounting load error:', err);
+            } finally {
+                if (mounted) setLoading(false);
             }
         }
         fetchAll();

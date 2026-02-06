@@ -7,7 +7,36 @@ if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Supabase credentials missing! The app will likely fail to fetch data. Check your Vercel Environment Variables.')
 }
 
+// Helper to create a mock that returns an error instead of crashing
+const createMock = (msg: string) => {
+    const mockResponse = (data: any = null) => Promise.resolve({ data, error: { message: msg } });
+    const chainable = {
+        select: () => ({
+            order: () => mockResponse([]),
+            limit: () => ({ single: () => mockResponse() }),
+            single: () => mockResponse(),
+            eq: () => ({ single: () => mockResponse() }),
+        }),
+        insert: () => ({
+            select: () => ({
+                ...chainable.select()
+            }),
+        }),
+        update: () => ({
+            eq: () => ({
+                select: () => ({
+                    ...chainable.select()
+                }),
+            }),
+        }),
+        delete: () => ({
+            eq: () => mockResponse(),
+        }),
+    };
+    return { from: () => chainable };
+}
+
 // Only create the client if we have a URL, otherwise use a placeholder to avoid crashing on import
 export const supabase = supabaseUrl
     ? createClient(supabaseUrl, supabaseAnonKey)
-    : { from: () => ({ select: () => ({ order: () => Promise.resolve({ data: [], error: new Error('Missing Supabase URL') }) }) }) } as any
+    : createMock('Supabase URL non configurée') as any

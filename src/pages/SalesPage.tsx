@@ -10,9 +10,14 @@ export default function SalesPage() {
 
     const loadSales = React.useCallback(async (isInitial = false) => {
         if (!isInitial) setLoading(true);
-        const data = await getSales();
-        setSales(data);
-        setLoading(false);
+        try {
+            const data = await getSales();
+            setSales(data);
+        } catch (err) {
+            console.error('Error loading sales:', err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {

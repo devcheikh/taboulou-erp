@@ -10,9 +10,14 @@ export default function HRPage() {
 
     const loadEmployees = React.useCallback(async (isInitial = false) => {
         if (!isInitial) setLoading(true);
-        const data = await getEmployees();
-        setEmployees(data);
-        setLoading(false);
+        try {
+            const data = await getEmployees();
+            setEmployees(data);
+        } catch (err) {
+            console.error('Error loading employees:', err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {

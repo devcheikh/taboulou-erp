@@ -10,9 +10,14 @@ export default function CRMPage() {
 
     const loadPartners = React.useCallback(async (isInitial = false) => {
         if (!isInitial) setLoading(true);
-        const data = await getPartners();
-        setPartners(data);
-        setLoading(false);
+        try {
+            const data = await getPartners();
+            setPartners(data);
+        } catch (err) {
+            console.error('Error loading partners:', err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {

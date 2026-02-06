@@ -10,9 +10,14 @@ export default function PurchasesPage() {
 
     const loadPurchases = React.useCallback(async (isInitial = false) => {
         if (!isInitial) setLoading(true);
-        const data = await getPurchases();
-        setPurchases(data);
-        setLoading(false);
+        try {
+            const data = await getPurchases();
+            setPurchases(data);
+        } catch (err) {
+            console.error('Error loading purchases:', err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {

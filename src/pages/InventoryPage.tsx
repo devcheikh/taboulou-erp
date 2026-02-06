@@ -10,9 +10,14 @@ export default function InventoryPage() {
 
     const loadProducts = React.useCallback(async (isInitial = false) => {
         if (!isInitial) setLoading(true);
-        const data = await getProducts();
-        setProducts(data);
-        setLoading(false);
+        try {
+            const data = await getProducts();
+            setProducts(data);
+        } catch (err) {
+            console.error('Error loading products:', err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {

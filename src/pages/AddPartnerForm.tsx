@@ -7,21 +7,27 @@ export default function AddPartnerForm({ onClose }: { onClose: () => void }) {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true)
-        const formData = new FormData(e.currentTarget)
-        const partnerData = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            address: formData.get('address'),
-            isCustomer: formData.get('isCustomer') === 'on',
-            isSupplier: formData.get('isSupplier') === 'on',
-        }
-        const result = await createPartner(partnerData)
-        setLoading(false)
-        if (result.success) {
-            onClose()
-        } else {
-            alert(result.error)
+        try {
+            const formData = new FormData(e.currentTarget)
+            const partnerData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                address: formData.get('address'),
+                isCustomer: formData.get('isCustomer') === 'on',
+                isSupplier: formData.get('isSupplier') === 'on',
+            }
+            const result = await createPartner(partnerData)
+            if (result.success) {
+                onClose()
+            } else {
+                alert(result.error)
+            }
+        } catch (err: any) {
+            console.error('Submission error:', err)
+            alert('Erreur lors de l’enregistrement : ' + (err.message || 'Une erreur inattendue est survenue'))
+        } finally {
+            setLoading(false)
         }
     }
 

@@ -7,20 +7,26 @@ export default function AddProductForm({ onClose }: { onClose: () => void }) {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setLoading(true)
-        const formData = new FormData(e.currentTarget)
-        const productData = {
-            name: formData.get('name'),
-            sku: formData.get('sku'),
-            salePrice: parseFloat(formData.get('salePrice') as string),
-            costPrice: parseFloat(formData.get('costPrice') as string),
-            stockQty: parseFloat(formData.get('stockQty') as string),
-        }
-        const result = await createProduct(productData)
-        setLoading(false)
-        if (result.success) {
-            onClose()
-        } else {
-            alert(result.error)
+        try {
+            const formData = new FormData(e.currentTarget)
+            const productData = {
+                name: formData.get('name'),
+                sku: formData.get('sku'),
+                salePrice: parseFloat(formData.get('salePrice') as string),
+                costPrice: parseFloat(formData.get('costPrice') as string),
+                stockQty: parseFloat(formData.get('stockQty') as string),
+            }
+            const result = await createProduct(productData)
+            if (result.success) {
+                onClose()
+            } else {
+                alert(result.error)
+            }
+        } catch (err: any) {
+            console.error('Submission error:', err)
+            alert('Erreur lors de la création : ' + (err.message || 'Une erreur inattendue est survenue'))
+        } finally {
+            setLoading(false)
         }
     }
 

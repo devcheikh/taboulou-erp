@@ -49,12 +49,17 @@ export default function AddPurchaseForm({ onClose }: { onClose: () => void }) {
         if (lineItems.some(i => !i.productId || i.qty <= 0)) return alert('Veuillez remplir correctement tous les articles')
 
         setLoading(true)
-        const result = await createPurchase(selectedPartner, lineItems)
-        setLoading(true) // Keep loading until closed
-        if (result.success) {
-            onClose()
-        } else {
-            alert(result.error)
+        try {
+            const result = await createPurchase(selectedPartner, lineItems)
+            if (result.success) {
+                onClose()
+            } else {
+                alert(result.error)
+            }
+        } catch (err: any) {
+            console.error('Purchase submission error:', err)
+            alert("Erreur lors de la validation de l'achat : " + (err.message || 'Une erreur inattendue est survenue'))
+        } finally {
             setLoading(false)
         }
     }
