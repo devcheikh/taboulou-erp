@@ -11,12 +11,12 @@ export default function CRMPage() {
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
-    async function loadPartners() {
-        setLoading(true);
+    const loadPartners = React.useCallback(async (isInitial = false) => {
+        if (!isInitial) setLoading(true);
         const data = await getPartners();
         setPartners(data);
         setLoading(false);
-    }
+    }, []);
 
     useEffect(() => {
         let mounted = true;

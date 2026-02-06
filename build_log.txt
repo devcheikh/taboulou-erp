@@ -1,0 +1,33 @@
+
+> taboulou-erp@0.1.0 build
+> next build
+
+▲ Next.js 16.1.4 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 16.9s
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/12) ...
+  Generating static pages using 3 workers (3/12) 
+  Generating static pages using 3 workers (6/12) 
+  Generating static pages using 3 workers (9/12) 
+✓ Generating static pages using 3 workers (12/12) in 1084.2ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /accounting
+├ ○ /cash
+├ ○ /crm
+├ ○ /hr
+├ ○ /inventory
+├ ○ /purchases
+├ ○ /sales
+└ ○ /settings
+
+
+○  (Static)  prerendered as static content
+

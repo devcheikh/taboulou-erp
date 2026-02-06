@@ -16,11 +16,12 @@ export default function PurchasesPage() {
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
-    async function loadPurchases() {
+    const loadPurchases = React.useCallback(async (isInitial = false) => {
+        if (!isInitial) setLoading(true);
         const data = await getPurchases();
         setPurchases(data);
         setLoading(false);
-    }
+    }, []);
 
     useEffect(() => {
         let mounted = true;

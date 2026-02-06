@@ -11,11 +11,12 @@ export default function InventoryPage() {
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
-    async function loadProducts() {
+    const loadProducts = React.useCallback(async (isInitial = false) => {
+        if (!isInitial) setLoading(true);
         const data = await getProducts();
         setProducts(data);
         setLoading(false);
-    }
+    }, []);
 
     useEffect(() => {
         let mounted = true;

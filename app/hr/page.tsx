@@ -11,13 +11,12 @@ export default function HRPage() {
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
-    async function loadEmployees() {
-        // No need to setLoading(true) here if it's already true on mount
-        // Only call it if it was false (e.g. after an add)
+    const loadEmployees = React.useCallback(async (isInitial = false) => {
+        if (!isInitial) setLoading(true);
         const data = await getEmployees();
         setEmployees(data);
         setLoading(false);
-    }
+    }, []);
 
     useEffect(() => {
         let mounted = true;

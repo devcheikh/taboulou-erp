@@ -16,11 +16,12 @@ export default function SalesPage() {
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
-    async function loadSales() {
+    const loadSales = React.useCallback(async (isInitial = false) => {
+        if (!isInitial) setLoading(true);
         const data = await getSales();
         setSales(data);
         setLoading(false);
-    }
+    }, []);
 
     useEffect(() => {
         let mounted = true;
