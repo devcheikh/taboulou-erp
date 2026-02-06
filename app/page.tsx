@@ -38,7 +38,7 @@ export default function Home() {
             <Link
               key={module.name}
               href={module.path}
-              className="group relative flex flex-col items-center p-6 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-indigo-100 hover:-translate-y-2 transition-all duration-300 animate-in fade-in zoom-in-95 duration-700"
+              className="group relative flex flex-col items-center p-6 rounded-[2.5rem] bg-white/70 glass-effect border border-white/20 shadow-premium hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-2 transition-all duration-500 animate-odoo-in"
               style={{ animationDelay: `${idx * 50}ms` }}
             >
               <div className={`w-20 h-20 rounded-3xl ${module.color} flex items-center justify-center text-4xl shadow-lg shadow-inner group-hover:scale-110 transition-transform duration-500`}>
