@@ -12,14 +12,23 @@ export default function CashPage() {
     const [opLabel, setOpLabel] = useState('');
 
     async function loadBalance() {
-        setLoading(true);
+        // setLoading(true); // Redundant if called on mount, but good for refresh
         const bal = await getCashBalance();
         setBalance(bal);
         setLoading(false);
     }
 
     useEffect(() => {
-        loadBalance();
+        let mounted = true;
+        async function init() {
+            const bal = await getCashBalance();
+            if (mounted) {
+                setBalance(bal);
+                setLoading(false);
+            }
+        }
+        init();
+        return () => { mounted = false; };
     }, []);
 
     async function handleOperation() {
@@ -119,7 +128,7 @@ export default function CashPage() {
 
                         <div className="p-8 space-y-6">
                             <div className="space-y-2">
-                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Montant de l'opération</label>
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Montant de l&apos;opération</label>
                                 <div className="relative">
                                     <input
                                         type="number"

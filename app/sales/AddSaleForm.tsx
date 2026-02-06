@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { createSale } from './actions'
 import { getProducts } from '../inventory/actions'
 import { getPartners } from '../crm/actions'
+import { Product, Partner } from '@prisma/client'
 
 export default function AddSaleForm({ onClose }: { onClose: () => void }) {
     const [loading, setLoading] = useState(false)
-    const [products, setProducts] = useState<any[]>([])
-    const [partners, setPartners] = useState<any[]>([])
+    const [products, setProducts] = useState<Product[]>([])
+    const [partners, setPartners] = useState<Partner[]>([])
     const [selectedPartner, setSelectedPartner] = useState('')
     const [lineItems, setLineItems] = useState<{ productId: string, qty: number, price: number }[]>([
         { productId: '', qty: 1, price: 0 }
@@ -19,7 +20,7 @@ export default function AddSaleForm({ onClose }: { onClose: () => void }) {
             const prodData = await getProducts()
             const partData = await getPartners()
             setProducts(prodData)
-            setPartners(partData.filter((p: any) => p.isCustomer))
+            setPartners(partData.filter((p: Partner) => p.isCustomer))
         }
         init()
     }, [])
@@ -28,7 +29,7 @@ export default function AddSaleForm({ onClose }: { onClose: () => void }) {
         setLineItems([...lineItems, { productId: '', qty: 1, price: 0 }])
     }
 
-    function updateLine(index: number, field: string, value: any) {
+    function updateLine(index: number, field: string, value: string | number) {
         const newList = [...lineItems]
         newList[index] = { ...newList[index], [field]: value }
 

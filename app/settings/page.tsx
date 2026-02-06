@@ -72,7 +72,7 @@ export default function SettingsPage() {
                         <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-2xl">📦</div>
                         <div>
                             <h3 className="text-xl font-black text-slate-800">Sauvegarde & Export</h3>
-                            <p className="text-xs text-slate-400 font-medium">Téléchargez l'intégralité de vos données au format JSON pour archive.</p>
+                            <p className="text-xs text-slate-400 font-medium">Téléchargez l&apos;intégralité de vos données au format JSON pour archive.</p>
                         </div>
                     </div>
                     <button

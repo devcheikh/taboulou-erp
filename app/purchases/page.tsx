@@ -4,21 +4,35 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getPurchases } from './actions';
 import AddPurchaseForm from './AddPurchaseForm';
+import { Purchase, Partner, PurchaseItem } from '@prisma/client';
+
+type PurchaseWithRelations = Purchase & {
+    partner: Partner;
+    items: PurchaseItem[];
+};
 
 export default function PurchasesPage() {
-    const [purchases, setPurchases] = useState<any[]>([]);
+    const [purchases, setPurchases] = useState<PurchaseWithRelations[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
     async function loadPurchases() {
-        setLoading(true);
         const data = await getPurchases();
         setPurchases(data);
         setLoading(false);
     }
 
     useEffect(() => {
-        loadPurchases();
+        let mounted = true;
+        async function init() {
+            const data = await getPurchases();
+            if (mounted) {
+                setPurchases(data);
+                setLoading(false);
+            }
+        }
+        init();
+        return () => { mounted = false; };
     }, []);
 
     return (
@@ -67,7 +81,7 @@ export default function PurchasesPage() {
                                             {p.items.length} articles
                                         </td>
                                         <td className="px-8 py-4 text-right font-black text-slate-900">
-                                            {new Intl.NumberFormat('fr-FR').format(p.totalAmount)} F
+                                            {new Intl.NumberFormat('fr-FR').format(Number(p.totalAmount))} F
                                         </td>
                                     </tr>
                                 ))}
@@ -77,7 +91,7 @@ export default function PurchasesPage() {
                 ) : (
                     <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-24 text-center max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 text-slate-400">🛒</div>
-                        <h2 className="text-2xl font-black text-slate-800 mb-2">Historique d'achats vide</h2>
+                        <h2 className="text-2xl font-black text-slate-800 mb-2">Historique d&apos;achats vide</h2>
                         <p className="text-slate-500 mb-8 max-w-sm mx-auto">Enregistrez vos achats pour réapprovisionner votre stock Mbodja.</p>
                         <button onClick={() => setShowAddForm(true)} className="bg-red-500 text-white px-8 py-3 rounded-2xl font-black shadow-lg shadow-red-100 hover:bg-red-600 transition-all">
                             NOUVEL ACHAT

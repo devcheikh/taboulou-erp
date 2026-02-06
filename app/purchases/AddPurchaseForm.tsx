@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { createPurchase } from './actions'
 import { getProducts } from '../inventory/actions'
 import { getPartners } from '../crm/actions'
+import { Product, Partner } from '@prisma/client'
 
 export default function AddPurchaseForm({ onClose }: { onClose: () => void }) {
     const [loading, setLoading] = useState(false)
-    const [products, setProducts] = useState<any[]>([])
-    const [partners, setPartners] = useState<any[]>([])
+    const [products, setProducts] = useState<Product[]>([])
+    const [partners, setPartners] = useState<Partner[]>([])
     const [selectedPartner, setSelectedPartner] = useState('')
     const [lineItems, setLineItems] = useState<{ productId: string, qty: number, price: number }[]>([
         { productId: '', qty: 1, price: 0 }
@@ -19,7 +20,7 @@ export default function AddPurchaseForm({ onClose }: { onClose: () => void }) {
             const prodData = await getProducts()
             const partData = await getPartners()
             setProducts(prodData)
-            setPartners(partData.filter((p: any) => p.isSupplier))
+            setPartners(partData.filter((p: Partner) => p.isSupplier))
         }
         init()
     }, [])
@@ -28,7 +29,7 @@ export default function AddPurchaseForm({ onClose }: { onClose: () => void }) {
         setLineItems([...lineItems, { productId: '', qty: 1, price: 0 }])
     }
 
-    function updateLine(index: number, field: string, value: any) {
+    function updateLine(index: number, field: string, value: string | number) {
         const newList = [...lineItems]
         newList[index] = { ...newList[index], [field]: value }
         if (field === 'productId') {
@@ -81,7 +82,7 @@ export default function AddPurchaseForm({ onClose }: { onClose: () => void }) {
                         <div className="grid grid-cols-12 gap-4 px-4 text-xs font-black text-slate-400 uppercase tracking-widest">
                             <div className="col-span-6">Article</div>
                             <div className="col-span-2 text-center">Qté</div>
-                            <div className="col-span-3 text-right">Prix d'Achat</div>
+                            <div className="col-span-3 text-right">Prix d&apos;Achat</div>
                             <div className="col-span-1"></div>
                         </div>
 
@@ -116,7 +117,7 @@ export default function AddPurchaseForm({ onClose }: { onClose: () => void }) {
                             <h3 className="text-3xl font-black">{new Intl.NumberFormat('fr-FR').format(total)} F</h3>
                         </div>
                         <button onClick={handleSubmit} disabled={loading} className="bg-red-500 text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:bg-red-600 disabled:opacity-50 transition-all">
-                            {loading ? 'CHARGEMENT...' : 'VALIDER L\'ACHAT'}
+                            {loading ? 'CHARGEMENT...' : "VALIDER L&apos;ACHAT"}
                         </button>
                     </div>
                 </div>

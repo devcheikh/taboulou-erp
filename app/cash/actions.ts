@@ -32,7 +32,7 @@ export async function createCashMovement(type: 'IN' | 'OUT', amount: number, lab
         const journal = await prisma.journal.findFirst({ where: { code: 'CSH' } })
         if (!journal) throw new Error('Journal de caisse non trouvé')
 
-        const result = await prisma.journalEntry.create({
+        await prisma.journalEntry.create({
             data: {
                 date: new Date(),
                 reference: `CSH/${Date.now()} - ${label}`,

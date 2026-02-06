@@ -3,31 +3,42 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getJournals, getAccounts, getTrialBalance, getGeneralLedger } from './actions';
+import { Journal, Account, JournalEntry, JournalItem } from '@prisma/client';
+
+type JournalWithCount = Journal & { _count: { entries: number } };
+type LedgerItem = JournalItem & { account: Account; entry: JournalEntry & { journal: Journal } };
+type TrialBalanceRow = Account & { debit: number; credit: number; balance: number };
 
 export default function AccountingPage() {
-    const [journals, setJournals] = useState<any[]>([]);
-    const [accounts, setAccounts] = useState<any[]>([]);
-    const [trialBalance, setTrialBalance] = useState<any[]>([]);
-    const [ledger, setLedger] = useState<any[]>([]);
+    const [journals, setJournals] = useState<JournalWithCount[]>([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
+    const [trialBalance, setTrialBalance] = useState<TrialBalanceRow[]>([]);
+    const [ledger, setLedger] = useState<LedgerItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('dashboard');
 
-    async function init() {
-        setLoading(true);
-        const jData = await getJournals();
-        const aData = await getAccounts();
-        const tbData = await getTrialBalance();
-        const lgData = await getGeneralLedger();
-
-        setJournals(jData);
-        setAccounts(aData);
-        setTrialBalance(tbData);
-        setLedger(lgData);
-        setLoading(false);
-    }
 
     useEffect(() => {
-        init();
+        let mounted = true;
+        async function fetchAll() {
+            setLoading(true);
+            const [jData, aData, tbData, lgData] = await Promise.all([
+                getJournals(),
+                getAccounts(),
+                getTrialBalance(),
+                getGeneralLedger()
+            ]);
+
+            if (mounted) {
+                setJournals(jData as JournalWithCount[]);
+                setAccounts(aData);
+                setTrialBalance(tbData as TrialBalanceRow[]);
+                setLedger(lgData as LedgerItem[]);
+                setLoading(false);
+            }
+        }
+        fetchAll();
+        return () => { mounted = false; };
     }, []);
 
     return (
@@ -116,8 +127,8 @@ export default function AccountingPage() {
                                                     <div className="text-[10px] text-slate-400 font-medium">{item.entry.reference}</div>
                                                 </td>
                                                 <td className="px-10 py-4 font-black text-indigo-900 text-xs">{item.account.code}</td>
-                                                <td className="px-10 py-4 text-right font-black text-emerald-600">{Number(item.debit) > 0 ? new Intl.NumberFormat('fr-FR').format(item.debit) : '-'}</td>
-                                                <td className="px-10 py-4 text-right font-black text-red-600">{Number(item.credit) > 0 ? new Intl.NumberFormat('fr-FR').format(item.credit) : '-'}</td>
+                                                <td className="px-10 py-4 text-right font-black text-emerald-600">{Number(item.debit) > 0 ? new Intl.NumberFormat('fr-FR').format(Number(item.debit)) : '-'}</td>
+                                                <td className="px-10 py-4 text-right font-black text-red-600">{Number(item.credit) > 0 ? new Intl.NumberFormat('fr-FR').format(Number(item.credit)) : '-'}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -147,10 +158,10 @@ export default function AccountingPage() {
                                             <tr key={row.id} className="border-b border-slate-50">
                                                 <td className="px-10 py-5 font-black text-indigo-600">{row.code}</td>
                                                 <td className="px-10 py-5 font-bold text-slate-700">{row.name}</td>
-                                                <td className="px-10 py-5 text-right font-black text-slate-900">{new Intl.NumberFormat('fr-FR').format(row.debit)}</td>
-                                                <td className="px-10 py-5 text-right font-black text-slate-900">{new Intl.NumberFormat('fr-FR').format(row.credit)}</td>
-                                                <td className={`px-10 py-5 text-right font-black ${row.balance < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-                                                    {new Intl.NumberFormat('fr-FR').format(Math.abs(row.balance))} {row.balance < 0 ? 'C' : 'D'}
+                                                <td className="px-10 py-5 text-right font-black text-slate-900">{new Intl.NumberFormat('fr-FR').format(Number(row.debit))}</td>
+                                                <td className="px-10 py-5 text-right font-black text-slate-900">{new Intl.NumberFormat('fr-FR').format(Number(row.credit))}</td>
+                                                <td className={`px-10 py-5 text-right font-black ${Number(row.balance) < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                                                    {new Intl.NumberFormat('fr-FR').format(Math.abs(Number(row.balance)))} {Number(row.balance) < 0 ? 'C' : 'D'}
                                                 </td>
                                             </tr>
                                         ))}

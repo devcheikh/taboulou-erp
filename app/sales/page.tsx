@@ -4,21 +4,35 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getSales } from './actions';
 import AddSaleForm from './AddSaleForm';
+import { Sale, Partner, SaleItem } from '@prisma/client';
+
+type SaleWithRelations = Sale & {
+    partner: Partner;
+    items: SaleItem[];
+};
 
 export default function SalesPage() {
-    const [sales, setSales] = useState<any[]>([]);
+    const [sales, setSales] = useState<SaleWithRelations[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
     async function loadSales() {
-        setLoading(true);
         const data = await getSales();
         setSales(data);
         setLoading(false);
     }
 
     useEffect(() => {
-        loadSales();
+        let mounted = true;
+        async function init() {
+            const data = await getSales();
+            if (mounted) {
+                setSales(data);
+                setLoading(false);
+            }
+        }
+        init();
+        return () => { mounted = false; };
     }, []);
 
     return (
@@ -68,7 +82,7 @@ export default function SalesPage() {
                                             {sale.items.length} {sale.items.length > 1 ? 'articles' : 'article'}
                                         </td>
                                         <td className="px-8 py-4 text-right font-black text-slate-900">
-                                            {new Intl.NumberFormat('fr-FR').format(sale.totalAmount)} F
+                                            {new Intl.NumberFormat('fr-FR').format(Number(sale.totalAmount))} F
                                         </td>
                                         <td className="px-8 py-4 text-center">
                                             <span className="bg-emerald-100 text-emerald-700 text-[10px] font-black px-3 py-1.5 rounded-full uppercase">Validé</span>

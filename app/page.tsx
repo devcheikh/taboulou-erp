@@ -28,7 +28,7 @@ export default function Home() {
             TABOULOU <span className="text-indigo-600">ERP</span>
           </h1>
           <p className="text-slate-500 text-lg font-medium max-w-md mx-auto">
-            Gérez votre entreprise avec la simplicité du moderne et la puissance de l'Odoo.
+            Gérez votre entreprise avec la simplicité du moderne et la puissance de l&apos;Odoo.
           </p>
         </div>
 

@@ -28,8 +28,8 @@ export async function seedInitialData() {
         for (const j of journals) {
             await prisma.journal.upsert({
                 where: { code: j.code },
-                update: { name: j.name, type: j.type as any },
-                create: { code: j.code, name: j.name, type: j.type as any }
+                update: { name: j.name, type: j.type },
+                create: { code: j.code, name: j.name, type: j.type }
             })
         }
 
@@ -46,8 +46,8 @@ export async function seedInitialData() {
         for (const a of accounts) {
             await prisma.account.upsert({
                 where: { code: a.code },
-                update: { name: a.name, type: a.type as any },
-                create: { code: a.code, name: a.name, type: a.type as any }
+                update: { name: a.name, type: a.type },
+                create: { code: a.code, name: a.name, type: a.type }
             })
         }
 

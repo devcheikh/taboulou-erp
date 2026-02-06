@@ -53,7 +53,7 @@ export default function AddProductForm({ onClose }: { onClose: () => void }) {
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Prix d'Achat (Coût)</label>
+                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Prix d&apos;Achat (Coût)</label>
                             <div className="relative">
                                 <input name="costPrice" type="number" step="0.01" required className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl pl-10 pr-4 py-3 focus:outline-none focus:border-indigo-500 transition-colors font-bold" />
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">F</span>

@@ -4,21 +4,30 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getProducts } from './actions';
 import AddProductForm from './AddProductForm';
+import { Product } from '@prisma/client';
 
 export default function InventoryPage() {
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
     async function loadProducts() {
-        setLoading(true);
         const data = await getProducts();
         setProducts(data);
         setLoading(false);
     }
 
     useEffect(() => {
-        loadProducts();
+        let mounted = true;
+        async function init() {
+            const data = await getProducts();
+            if (mounted) {
+                setProducts(data);
+                setLoading(false);
+            }
+        }
+        init();
+        return () => { mounted = false; };
     }, []);
 
     return (
@@ -91,7 +100,7 @@ export default function InventoryPage() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right font-black text-slate-800">
-                                            {new Intl.NumberFormat('fr-FR').format(product.salePrice)} <small className="text-[10px] text-slate-400">FCFA</small>
+                                            {new Intl.NumberFormat('fr-FR').format(Number(product.salePrice))} <small className="text-[10px] text-slate-400">FCFA</small>
                                         </td>
                                     </tr>
                                 ))}

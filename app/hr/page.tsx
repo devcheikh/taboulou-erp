@@ -4,21 +4,32 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getEmployees } from './actions';
 import AddEmployeeForm from './AddEmployeeForm';
+import { Employee } from '@prisma/client';
 
 export default function HRPage() {
-    const [employees, setEmployees] = useState<any[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
     async function loadEmployees() {
-        setLoading(true);
+        // No need to setLoading(true) here if it's already true on mount
+        // Only call it if it was false (e.g. after an add)
         const data = await getEmployees();
         setEmployees(data);
         setLoading(false);
     }
 
     useEffect(() => {
-        loadEmployees();
+        let mounted = true;
+        async function init() {
+            const data = await getEmployees();
+            if (mounted) {
+                setEmployees(data);
+                setLoading(false);
+            }
+        }
+        init();
+        return () => { mounted = false; };
     }, []);
 
     return (
@@ -68,7 +79,7 @@ export default function HRPage() {
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-black text-slate-400 uppercase">Salaire Base</span>
-                                        <span className="font-black text-slate-900">{new Intl.NumberFormat('fr-FR').format(emp.baseSalary)} F</span>
+                                        <span className="font-black text-slate-900">{new Intl.NumberFormat('fr-FR').format(Number(emp.baseSalary))} F</span>
                                     </div>
                                 </div>
 
@@ -80,7 +91,7 @@ export default function HRPage() {
                 ) : (
                     <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-24 text-center max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 text-orange-400">👥</div>
-                        <h2 className="text-2xl font-black text-slate-800 mb-2">Gestion de l'équipe</h2>
+                        <h2 className="text-2xl font-black text-slate-800 mb-2">Gestion de l&apos;équipe</h2>
                         <p className="text-slate-500 mb-8 max-w-sm mx-auto">Ajoutez vos employés pour gérer leurs fiches de paie et leurs présences.</p>
                         <button
                             onClick={() => setShowAddForm(true)}

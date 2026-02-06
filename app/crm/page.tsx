@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getPartners } from './actions';
 import AddPartnerForm from './AddPartnerForm';
+import { Partner } from '@prisma/client';
 
 export default function CRMPage() {
-    const [partners, setPartners] = useState<any[]>([]);
+    const [partners, setPartners] = useState<Partner[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
 
@@ -18,7 +19,16 @@ export default function CRMPage() {
     }
 
     useEffect(() => {
-        loadPartners();
+        let mounted = true;
+        async function init() {
+            const data = await getPartners();
+            if (mounted) {
+                setPartners(data);
+                setLoading(false);
+            }
+        }
+        init();
+        return () => { mounted = false; };
     }, []);
 
     return (
@@ -64,7 +74,7 @@ export default function CRMPage() {
                                     <p className="text-sm font-bold text-slate-600">{partner.phone || 'Pas de numéro'}</p>
                                 </div>
                                 <div className="mt-6 pt-4 border-t border-slate-50 flex justify-between items-center text-xs font-black text-slate-400 group-hover:text-purple-400 transition-colors">
-                                    <span>VOIR L'HISTORIQUE</span>
+                                    <span>VOIR L&apos;HISTORIQUE</span>
                                     <span>→</span>
                                 </div>
                             </div>
