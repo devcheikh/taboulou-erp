@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Taboulou ERP
 
-## Getting Started
+Une solution ERP moderne et performante pour la gestion d'entreprise, migrée vers une architecture **Vite + React**.
 
-First, run the development server:
+## 🚀 Technologies
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Frontend** : React 19, Vite 6
+- **Styling** : Tailwind CSS 4 (Glassmorphism, Animations Odoo-style)
+- **Base de données** : Supabase (PostgreSQL)
+- **Routage** : React Router 7
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Installation et Dépendances
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Installez les dépendances :
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Configurez votre fichier `.env` avec vos clés Supabase :
+   ```env
+   VITE_SUPABASE_URL=votre_url_supabase
+   VITE_SUPABASE_ANON_KEY=votre_cle_anon
+   ```
 
-## Learn More
+## 📖 Commandes Disponibles
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` : Lance le serveur de développement local.
+- `npm run build` : Génère le build de production optimisé dans le dossier `dist/`.
+- `npm run preview` : Prévisualise le build de production localement.
+- `npm run lint` : Vérifie la qualité du code avec ESLint.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🌐 Déploiement
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Le projet est configuré pour un déploiement continu sur **Vercel**. 
+> [!IMPORTANT]
+> Assurez-vous que le **Framework Preset** sur Vercel est réglé sur **Vite** et que vos variables d'environnement commencent par `VITE_`.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Développé avec ❤️ pour Taboulou ERP.*
