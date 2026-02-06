@@ -26,6 +26,7 @@ model Journal {
   id            String         @id @default(cuid())
   name          String
   code          String         @unique // VEN, ACH, CAI, MISC
+  type          String?        // SALE, PURCHASE, CASH, BANK, GENERAL
   entries       JournalEntry[]
 }
 
@@ -35,6 +36,8 @@ model JournalEntry {
   reference     String?
   journalId     String
   journal       Journal        @relation(fields: [journalId], references: [id])
+  partnerId     String?
+  partner       Partner?       @relation(fields: [partnerId], references: [id])
   items         JournalItem[]
   createdAt     DateTime       @default(now())
 }
@@ -55,18 +58,19 @@ model JournalItem {
 // --- CRM & PARTNERS ---
 
 model Partner {
-  id            String         @id @default(cuid())
-  name          String
-  email         String?
-  phone         String?
-  address       String?
-  isCustomer    Boolean        @default(true)
-  isSupplier    Boolean        @default(false)
-  sales         Sale[]
-  purchases     Purchase[]
-  journalItems  JournalItem[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id             String         @id @default(cuid())
+  name           String
+  email          String?
+  phone          String?
+  address        String?
+  isCustomer     Boolean        @default(true)
+  isSupplier     Boolean        @default(false)
+  sales          Sale[]
+  purchases      Purchase[]
+  journalItems   JournalItem[]
+  journalEntries JournalEntry[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 // --- INVENTORY ---
@@ -107,6 +111,7 @@ model Product {
 model Warehouse {
   id            String         @id @default(cuid())
   name          String
+  code          String?        @unique
   location      String?
   stockMoves    StockMove[]
 }
